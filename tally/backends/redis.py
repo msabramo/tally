@@ -1,16 +1,10 @@
 from __future__ import absolute_import
 
-from datetime import date
-
 from redis.connection import UnixDomainSocketConnection, Connection
 from redis import ConnectionPool, Redis
 
 from .. import conf
 from . import BaseBackend
-
-
-def today():
-    return date.today()
 
 
 class CacheConnectionPool(object):

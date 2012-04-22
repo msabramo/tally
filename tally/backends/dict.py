@@ -9,13 +9,7 @@ testing, development and debugging purposes.
 
 from __future__ import absolute_import
 
-from datetime import date
-
 from . import BaseBackend
-
-
-def today():
-    return date.today()
 
 
 class Backend(BaseBackend):
