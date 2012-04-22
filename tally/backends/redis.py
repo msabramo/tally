@@ -53,7 +53,8 @@ class Backend(BaseBackend):
     def incr(self, key):
 
         value_key = self.value_key(key)
-        keys_key = self.keys_key(key)
+        keyring_key = self.keyring_key(key)
+        date_string = self.date_string()
 
         self.conn.incr(value_key)
-        self.conn.sadd(keys_key, value_key)
+        self.conn.zadd(keyring_key, value_key, date_string)

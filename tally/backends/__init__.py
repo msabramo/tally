@@ -20,7 +20,6 @@ class BaseBackend(object):
         key = "%s:by.date:%s" % (key, self.date_string())
         return key
 
-    def keys_key(self, key):
-        """ Worst method name evar?"""
+    def keyring_key(self, key):
         key = "%s:by.date:keys" % key
         return key

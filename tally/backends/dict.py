@@ -29,12 +29,12 @@ class Backend(BaseBackend):
     def incr(self, key):
 
         value_key = self.value_key(key)
-        keys_key = self.keys_key(key)
+        keyring_key = self.keyring_key(key)
 
         self.store[value_key] = self.store.get(value_key, 0) + 1
 
-        self.store[keys_key] = self.store.get(keys_key, set())
-        self.store[keys_key].add(value_key)
+        self.store[keyring_key] = self.store.get(keyring_key, set())
+        self.store[keyring_key].add(value_key)
 
     def get(self, key):
         return self.store.get(self.value_key(key))
