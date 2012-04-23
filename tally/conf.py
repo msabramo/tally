@@ -7,7 +7,7 @@ REDIS_DATABASE = 1
 
 DATE_FORMAT = "%Y-%m-%d"
 
-STORAGE_BACKEND = 'tally.backends.redis'
+STORAGE_BACKEND = 'tally.storage.backends.redis'
 
 try:
     from tallyconfig import *

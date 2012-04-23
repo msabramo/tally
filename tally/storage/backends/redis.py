@@ -3,8 +3,8 @@ from __future__ import absolute_import
 from redis.connection import UnixDomainSocketConnection, Connection
 from redis import ConnectionPool, Redis
 
-from .. import conf
-from . import BaseBackend
+from ... import conf
+from ..base import BaseBackend
 
 
 class CacheConnectionPool(object):
@@ -38,10 +38,9 @@ pool = CacheConnectionPool()
 class Backend(BaseBackend):
 
     def __init__(self):
+
         redis_db = conf.REDIS_DATABASE
-
         connection_pool = pool.get_connection_pool(db=redis_db)
-
         self.conn = Redis(connection_pool=connection_pool)
 
     def incr(self, key):

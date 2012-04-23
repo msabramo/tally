@@ -1,10 +1,10 @@
 from unittest2 import TestCase
 
 
-class LocmemBackendTestCase(TestCase):
+class DictBackendTestCase(TestCase):
 
     def setUp(self):
-        from tally.backends.dict import Backend
+        from tally.storage.backends.dict import Backend
         self.storage = Backend()
         self.storage.flush()
 
