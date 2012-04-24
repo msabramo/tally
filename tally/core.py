@@ -18,3 +18,7 @@ class BaseAnalytics(object):
 
     def min_keyring(self, keyring_name, start, end):
         pass
+
+
+class ImproperlyConfigured(Exception):
+    pass

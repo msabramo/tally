@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
-from . import conf
-from .core import BaseAnalytics
-from .util import import_module
+from tally import conf
+from tally.core import BaseAnalytics
+from tally.util import import_module
 
 
 def importbackend(dotted_path):
@@ -24,3 +24,7 @@ def get_analytics():
 def incr(key):
     a = get_analytics()
     a.incr(key)
+
+
+def fetch_data(key):
+    pass

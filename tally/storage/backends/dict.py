@@ -9,7 +9,7 @@ testing, development and debugging purposes.
 
 from __future__ import absolute_import
 
-from ..base import BaseBackend
+from tally.storage.base import BaseBackend
 
 
 class Backend(BaseBackend):

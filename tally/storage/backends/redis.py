@@ -3,8 +3,8 @@ from __future__ import absolute_import
 from redis.connection import UnixDomainSocketConnection, Connection
 from redis import ConnectionPool, Redis
 
-from ... import conf
-from ..base import BaseBackend
+from tally import conf
+from tally.storage.base import BaseBackend
 
 
 class CacheConnectionPool(object):
@@ -47,7 +47,7 @@ class Backend(BaseBackend):
 
         value_key = self.value_key(key)
         keyring_key = self.keyring_key(key)
-        date_string = self.date_string()
+        timestamp = self.timestamp()
 
         self.conn.incr(value_key)
-        self.conn.zadd(keyring_key, value_key, date_string)
+        self.conn.zadd(keyring_key, value_key, timestamp)
