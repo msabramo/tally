@@ -16,6 +16,7 @@ Vagrant::Config.run do |config|
 
     chef.add_recipe "main"
     chef.add_recipe "python"
+    chef.add_recipe "postgres"
 
     chef.json.merge!({
 
