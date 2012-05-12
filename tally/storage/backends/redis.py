@@ -5,6 +5,7 @@ from redis import ConnectionPool, Redis
 
 from tally import conf
 from tally.storage.base import BaseBackend
+from tally.utlils.functools import memoize
 
 
 class CacheConnectionPool(object):
@@ -35,6 +36,11 @@ class CacheConnectionPool(object):
 pool = CacheConnectionPool()
 
 
+METRIC_NAMES_KEY = "METRIC_NAMES_KEY"
+
+_key_cache = {}
+
+
 class Backend(BaseBackend):
 
     def __init__(self):
@@ -43,7 +49,20 @@ class Backend(BaseBackend):
         connection_pool = pool.get_connection_pool(db=redis_db)
         self.conn = Redis(connection_pool=connection_pool)
 
+    def store_key(self, key):
+
+        def store(k):
+            self.conn.sadd(METRIC_NAMES_KEY, k)
+            return k
+
+        store = memoize(store, _key_cache, 1)
+
+        return store(key)
+
     def incr(self, key):
+
+        self.store_key(key)
+        #self.conn.sadd(METRIC_NAMES_KEY, key)
 
         value_key = self.value_key(key)
         keyring_key = self.keyring_key(key)
@@ -51,3 +70,13 @@ class Backend(BaseBackend):
 
         self.conn.incr(value_key)
         self.conn.zadd(keyring_key, value_key, timestamp)
+
+    def metric_keys(self):
+        return self.conn.smembers(METRIC_NAMES_KEY)
+
+    def value_keys(self, key):
+        return self.conn.zrange(self.keyring_key(key), 0, -1)
+
+    def values(self, key):
+        keys = self.value_keys(key)
+        return self.conn.mget(keys)

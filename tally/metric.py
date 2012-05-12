@@ -28,3 +28,18 @@ def incr(key):
 
 def fetch_data(key):
     pass
+
+
+def metric_keys():
+    a = get_analytics()
+    return a.metric_keys()
+
+
+def value_keys(key):
+    a = get_analytics()
+    return a.value_keys(key)
+
+
+def values(key):
+    a = get_analytics()
+    return a.values(key)
