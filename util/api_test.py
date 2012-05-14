@@ -27,13 +27,18 @@ print "Monkey patching now for random dates in tally.base.now"
 
 def now():
     now = int(time())
-    return randint(now - 100, now)
+    # number of weeks.
+    year = (60 * 60 * 24) * (5 * randint(1, 365 / 5))
+    r = now - year
+    return r
 base.now = now
 
 print "Creating dummy data points."
+
 start = time()
-for i in xrange(5000):
-    n = choice(["stat1", "stat2", "stat3", "stat4"])
+stat_names = ['registrations', 'posts', 'page loads', 'updates', 'something else']
+for i in xrange(10000):
+    n = choice(stat_names)
     metric.incr(n)
 
 print "Reloaded in %f secconds....\n" % (time() - start)

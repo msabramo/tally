@@ -17,27 +17,38 @@ def index():
     return render_template("index.html", keys=keys)
 
 
-@app.route("/metrics", methods=['GET'])
+@app.route("/api/metrics", methods=['GET'])
 def list_metrics():
-    return jsonify(data=list(metric_keys()))
+    metrics = [{'name': key} for key in metric_keys()]
+    return jsonify(data=metrics)
 
 
-@app.route("/metric/<slug>", methods=['POST'])
+@app.route("/api/metric/<slug>", methods=['POST'])
 def create_metric(slug):
     return "POST"
 
 
-@app.route("/metric/<slug>", methods=['PUT'])
+@app.route("/api/metric/<slug>", methods=['PUT'])
 def update_metric(slug):
     return "PUT"
 
 
-@app.route("/metric/<slug>", methods=['DELETE'])
+@app.route("/api/metric/<slug>", methods=['DELETE'])
 def delete_metric(slug):
     if request.method == 'DELETE':
         return "DELETE"
 
 
-@app.route("/metric/<slug>", methods=['GET'])
+@app.route("/api/metric/<slug>", methods=['GET'])
 def get_metric(slug):
-    return jsonify(keys=value_keys(slug), values=values(slug))
+
+    keys = [k.rsplit(":", 1)[1] for k in value_keys(slug)]
+    vals = values(slug)
+    data = sorted(list(zip(keys, vals)))
+
+    return jsonify(data=data)
+
+
+@app.context_processor
+def inject_debug():
+    return dict(debug=DEBUG)
