@@ -60,11 +60,10 @@ $(function(){
                             element: document.querySelector("#chart"),
                             width: 580,
                             height: 250,
-                            renderer: 'area',
+                            renderer: 'stack',
                             series: [ {
                                     data: data,
-                                    color: 'rgba(96,170,255,0.5)',
-                                    stroke: 'rgba(0,0,0,0.15)'
+                                    color: 'steelblue'
                             } ]
                     } );
 
@@ -78,6 +77,17 @@ $(function(){
                     });
 
                     graph.render();
+
+                    var hoverDetail = new Rickshaw.Graph.HoverDetail({
+                        graph: graph,
+                        formatter: function(series, x, y) {
+                            var date = '<span class="date">' + new Date(x * 1000).toUTCString() + '</span>';
+                            var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+                            var content = swatch + series.name + ": " + parseInt(y, 10) + '<br>' + date;
+                            return content;
+                        }
+                    });
+
                 }
             });
 
