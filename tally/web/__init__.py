@@ -1,5 +1,8 @@
 from __future__ import absolute_import
 
+from datetime import datetime
+from time import mktime
+
 from flask import Flask, request, jsonify, render_template
 
 from tally.metric import value_keys, metric_keys, values
@@ -44,7 +47,15 @@ def get_metric(slug):
 
     keys = [k.rsplit(":", 1)[1] for k in value_keys(slug)]
     vals = values(slug)
-    data = sorted(list(zip(keys, vals)))
+
+    if 'daily' in request.args:
+        keys = [mktime(datetime.fromtimestamp(float(str(key))).date().timetuple()) for key in keys]
+        data = {}
+        for i, key in enumerate(keys):
+            data[key] = data.get(key, 0) + int(vals[i])
+        data = sorted(list(data.items()))
+    else:
+        data = sorted(list(zip(keys, vals)))
 
     return jsonify(data=data)
 

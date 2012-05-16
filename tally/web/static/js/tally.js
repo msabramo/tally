@@ -42,7 +42,7 @@ $(function(){
             $('#stat_name').html(slug);
 
             $.ajax({
-                url: "/api/metric/" + slug,
+                url: "/api/metric/" + slug + "?daily=1",
                 success: function(response){
 
                     var data = [];

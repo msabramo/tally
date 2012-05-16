@@ -37,6 +37,7 @@ pool = CacheConnectionPool()
 
 
 METRIC_NAMES_KEY = "METRIC_NAMES_KEY"
+METRIC_STORE_KEY = "METRIC_STORE_KEY"
 
 _key_cache = {}
 
@@ -49,20 +50,30 @@ class Backend(BaseBackend):
         connection_pool = pool.get_connection_pool(db=redis_db)
         self.conn = Redis(connection_pool=connection_pool)
 
-    def store_key(self, key):
+    def store_key(self, key, set_key):
 
-        def store(k):
-            self.conn.sadd(METRIC_NAMES_KEY, k)
-            return k
+        def store(k1, k2):
+            self.conn.sadd(k1, k2)
+            return k1
 
-        store = memoize(store, _key_cache, 1)
+        store = memoize(store, _key_cache, 2)
 
-        return store(key)
+        return store(key, set_key)
 
     def incr(self, key):
 
-        self.store_key(key)
-        #self.conn.sadd(METRIC_NAMES_KEY, key)
+        self.store_key(key, METRIC_NAMES_KEY)
+
+        value_key = self.value_key(key)
+        keyring_key = self.keyring_key(key)
+        timestamp = self.timestamp()
+
+        self.conn.incr(value_key)
+        self.conn.zadd(keyring_key, value_key, timestamp)
+
+    def add(self, key, value):
+        raise Exception("Not yet implemented fully")
+        self.store_key(key, METRIC_STORE_KEY)
 
         value_key = self.value_key(key)
         keyring_key = self.keyring_key(key)
