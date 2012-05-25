@@ -54,6 +54,11 @@ def get_metric(slug):
         for i, key in enumerate(keys):
             data[key] = data.get(key, 0) + int(vals[i])
         data = sorted(list(data.items()))
+    elif 'weekly' in request.args:
+        new_keys = []
+        for key in keys:
+            datetime.fromtimestamp(float(str(key))).date()
+        data = {}
     else:
         data = sorted(list(zip(keys, vals)))
 
