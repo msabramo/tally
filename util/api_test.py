@@ -28,7 +28,7 @@ print "HACK: Monkey patching now for random dates in tally.base.now"
 
 def now():
     now = int(time())
-    year = randint(1, 60) * 60 * 24 * 7 * 52
+    year = randint(1, 60 * 2) * 30 * 24 * 7 * 52
     r = now - year
     return r
 
@@ -42,12 +42,18 @@ for i in xrange(10000):
     n = choice(stat_names)
     metric.incr(n)
 
+for i in range(10000):
+    metric.record("Processing Time", randint(0, 5))
+
+
 print "Reloaded in %f secconds....\n" % (time() - start)
 print
 
-print "KEYS :", metric.keys()
-for k in metric.keys():
+
+print "KEYS :", metric.counters()
+for k in metric.counters():
     print "VALS :", len(metric.values(k))
+
 
 print "\n\nStarting flask web UI....\n\n"
 

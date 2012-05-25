@@ -49,10 +49,19 @@
 
       <div id="main" role="main">
 
-        <div id="metrics">
-          <h2>Stats</h2>
+        <div id="counters">
+          <h2>Counters</h2>
           <ul>
-          {% for key in keys %}
+          {% for key in counters %}
+            <li><a href="#!/metric/{{ key }}">{{ key }}</a></li>
+          {% endfor %}
+          </ul>
+        </div>
+
+        <div id="records">
+          <h2>Records</h2>
+          <ul>
+          {% for key in records %}
             <li><a href="#!/metric/{{ key }}">{{ key }}</a></li>
           {% endfor %}
           </ul>

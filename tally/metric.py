@@ -9,12 +9,20 @@ from functools import wraps
 from tally.core import get_analytics
 
 
-def keys():
+def counters():
     """
     Return all of the stats that are currently stored in the backend.
     """
     a = get_analytics()
-    return a.keys()
+    return a.counters()
+
+
+def records():
+    """
+    Return all of the stats that are currently stored in the backend.
+    """
+    a = get_analytics()
+    return a.records()
 
 
 def values(key):
@@ -30,7 +38,7 @@ def items(key):
     Return a iterable of 2-tuples that contain the key and relevant value
     stored in the backend.
     """
-    return izip(keys(), values())
+    return izip(counters(), values())
 
 
 def keyring(key):

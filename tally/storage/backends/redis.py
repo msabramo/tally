@@ -65,28 +65,31 @@ class Backend(BaseBackend):
         self.store_key(key, METRIC_NAMES_KEY)
 
         value_key = self.value_key(key)
-        keyring_key = self.keyring_key(key)
+        keyring_key = self.keyring_key(key, "by.date")
         timestamp = self.timestamp()
 
         self.conn.incr(value_key)
         self.conn.zadd(keyring_key, value_key, timestamp)
 
-    def add(self, key, value):
-        raise Exception("Not yet implemented fully")
+    def record(self, key, value):
+
         self.store_key(key, METRIC_STORE_KEY)
 
         value_key = self.value_key(key)
-        keyring_key = self.keyring_key(key)
+        keyring_key = self.keyring_key(key, "stored.values")
         timestamp = self.timestamp()
 
-        self.conn.incr(value_key)
+        self.conn.sadd(value_key, value)
         self.conn.zadd(keyring_key, value_key, timestamp)
 
-    def keys(self):
+    def counters(self):
         return self.conn.smembers(METRIC_NAMES_KEY)
 
+    def records(self):
+        return self.conn.smembers(METRIC_STORE_KEY)
+
     def keyring(self, key):
-        return self.conn.zrange(self.keyring_key(key), 0, -1)
+        return self.conn.zrange(self.keyring_key(key, "by.date"), 0, -1)
 
     def values(self, key):
         keys = self.keyring(key)

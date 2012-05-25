@@ -33,16 +33,25 @@ $(function(){
     var WorkspaceRouter = Backbone.Router.extend({
 
         routes: {
-            "!/metric/:slug": 'metric'
+            "!/metric/record/:slug": 'metric',
+            "!/metric/counter/:slug": 'metric'
         },
 
-        metric: function(slug){
+        counter: function(slug){
+            return this.metric(slug, '/api/metric/counter/');
+        },
+
+        record: function(slug){
+            return this.metric(slug, '/api/metric/record/');
+        },
+
+        metric: function(slugi, path){
 
             $('#chart, #y_axis').html("");
             $('#stat_name').html(slug);
 
             $.ajax({
-                url: "/api/metric/" + slug + "?daily=1",
+                url: path + slug,
                 success: function(response){
 
                     var data = [];

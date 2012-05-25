@@ -13,14 +13,20 @@ class BaseAnalytics(object):
     def incr(self, stat_name):
         self.storage.incr(stat_name)
 
-    def keys(self):
-        return self.storage.keys()
+    def counters(self):
+        return self.storage.counters()
+
+    def records(self):
+        return self.storage.records()
 
     def keyring(self, key):
         return self.storage.keyring(key)
 
     def values(self, key):
         return self.storage.values(key)
+
+    def record(self, key, value):
+        return self.storage.record(key, value)
 
 
 class ImproperlyConfigured(Exception):

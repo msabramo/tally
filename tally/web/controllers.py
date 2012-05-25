@@ -5,7 +5,7 @@ from time import mktime
 
 from flask import Flask, request, jsonify, render_template
 
-from tally.metric import  keys, values, keyring
+from tally.metric import  counters, records, values, keyring
 
 app = Flask('tally.web')
 
@@ -16,30 +16,9 @@ app.config.from_object(__name__)
 
 @app.route("/")
 def index():
-    all_keys = sorted(list(keys()))
-    return render_template("index.html", keys=all_keys)
-
-
-@app.route("/api/metrics", methods=['GET'])
-def list_metrics():
-    metrics = [{'name': key} for key in keys()]
-    return jsonify(data=metrics)
-
-
-@app.route("/api/metric/<slug>", methods=['POST'])
-def create_metric(slug):
-    return "POST"
-
-
-@app.route("/api/metric/<slug>", methods=['PUT'])
-def update_metric(slug):
-    return "PUT"
-
-
-@app.route("/api/metric/<slug>", methods=['DELETE'])
-def delete_metric(slug):
-    if request.method == 'DELETE':
-        return "DELETE"
+    all_counters = sorted(list(counters()))
+    all_records = sorted(list(records()))
+    return render_template("index.html", counters=all_counters, records=all_records)
 
 
 @app.route("/api/metric/<slug>", methods=['GET'])

@@ -17,6 +17,6 @@ class BaseBackend(object):
         key = "%s:by.date:%s" % (key, self.timestamp())
         return key
 
-    def keyring_key(self, key):
-        key = "%s:by.date:keys" % key
+    def keyring_key(self, key, name):
+        key = "%s:%s:keys" % (key, name)
         return key
