@@ -6,6 +6,7 @@ Vagrant::Config.run do |config|
   config.vm.network :hostonly, "33.33.33.50"
 
   config.vm.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
 
   config.vm.provision :chef_solo do |chef|
 

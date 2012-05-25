@@ -1,45 +1,96 @@
-from __future__ import absolute_import
+"""
+A set of Tally utility functions that provide shortcuts and the simplest API
+access to features.
+"""
+from itertools import izip
+from time import clock
+from functools import wraps
 
-from tally import conf
-from tally.core import BaseAnalytics
-from tally.util import import_module
-
-
-def importbackend(dotted_path):
-    # This kinda sucks ATM.
-    return import_module(dotted_path).Backend
-
-
-def get_backend():
-    backend_path = conf.STORAGE_BACKEND
-    backend = importbackend(backend_path)
-    return backend()
+from tally.core import get_analytics
 
 
-def get_analytics():
-    backend = get_backend()
-    return BaseAnalytics(backend)
+def keys():
+    """
+    Return all of the stats that are currently stored in the backend.
+    """
+    a = get_analytics()
+    return a.keys()
+
+
+def values(key):
+    """
+    Return all of the values that are currently stored for keys in the backend.
+    """
+    a = get_analytics()
+    return a.values(key)
+
+
+def items(key):
+    """
+    Return a iterable of 2-tuples that contain the key and relevant value
+    stored in the backend.
+    """
+    return izip(keys(), values())
+
+
+def keyring(key):
+    a = get_analytics()
+    return a.keyring(key)
 
 
 def incr(key):
+    """
+    Increment the value of a specific key.
+    """
     a = get_analytics()
     a.incr(key)
 
 
-def fetch_data(key):
-    pass
+def record(key, value=None):
+    """
+    record a specific value against a key.
+    """
 
-
-def metric_keys():
     a = get_analytics()
-    return a.metric_keys()
+    a.record(key, value)
+
+    return value
 
 
-def value_keys(key):
-    a = get_analytics()
-    return a.value_keys(key)
+def counter(key):
+    """
+    Decorator factory to create a decorator that is bound to a key and will
+    count the number of calls to the method it wraps
+    """
+
+    def inner_timer(f):
+
+        @wraps(f)
+        def wrapper(*args, **kwds):
+            result = f(*args, **kwds)
+            incr(key)
+            return result
+
+        return wrapper
+
+    return inner_timer
 
 
-def values(key):
-    a = get_analytics()
-    return a.values(key)
+def timer(key):
+    """
+    Decorator factory to create a decorator that is bound to a key and will
+    record the execution time of what it wraps under that key.
+    """
+
+    def inner_timer(f):
+
+        @wraps(f)
+        def wrapper(*args, **kwds):
+            t = clock()
+            result = f(*args, **kwds)
+            record(key, clock() - t)
+            return result
+
+        return wrapper
+
+    return inner_timer

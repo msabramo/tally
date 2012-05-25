@@ -1,5 +1,8 @@
 from __future__ import absolute_import
 
+from tally import conf
+from tally.utils import import_module
+
 
 class BaseAnalytics(object):
 
@@ -10,24 +13,35 @@ class BaseAnalytics(object):
     def incr(self, stat_name):
         self.storage.incr(stat_name)
 
-    def sum_keyring(self, keyring_name, start, end):
-        pass
+    def keys(self):
+        return self.storage.keys()
 
-    def max_keyring(self, keyring_name, start, end):
-        pass
-
-    def min_keyring(self, keyring_name, start, end):
-        pass
-
-    def metric_keys(self):
-        return self.storage.metric_keys()
-
-    def value_keys(self, key):
-        return self.storage.value_keys(key)
+    def keyring(self, key):
+        return self.storage.keyring(key)
 
     def values(self, key):
         return self.storage.values(key)
 
 
 class ImproperlyConfigured(Exception):
+    pass
+
+
+def importbackend(dotted_path):
+    # TODO: Handle errors.
+    return import_module(dotted_path).Backend
+
+
+def get_backend():
+    backend_path = conf.STORAGE_BACKEND
+    backend = importbackend(backend_path)
+    return backend()
+
+
+def get_analytics():
+    backend = get_backend()
+    return BaseAnalytics(backend)
+
+
+def fetch_data(key):
     pass

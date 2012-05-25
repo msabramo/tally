@@ -6,15 +6,16 @@ from sys import path
 from time import time
 
 from redis import Redis
+
+print "HACK: Adding tally to the python path"
+path.append("%s/.." % abspath(dirname(__file__)))
+
 from tally import conf
 from tally import metric
 from tally.storage import base
 from tally.storage.backends.redis import pool
-from tally.web import app
+from tally.web.controllers import app
 
-print "Adding tally to the python path"
-d = abspath(dirname(__file__))
-path.append("%s/.." % d)
 
 print "Flushing Redis"
 redis_db = conf.REDIS_DATABASE
@@ -22,14 +23,15 @@ connection_pool = pool.get_connection_pool(db=redis_db)
 conn = Redis(connection_pool=connection_pool)
 conn.flushdb()
 
-print "Monkey patching now for random dates in tally.base.now"
+print "HACK: Monkey patching now for random dates in tally.base.now"
 
 
 def now():
     now = int(time())
-    year = randint(1, 60 * 60 * 24 * 7 * 52)
+    year = randint(1, 60) * 60 * 24 * 7 * 52
     r = now - year
     return r
+
 base.now = now
 
 print "Creating dummy data points."
@@ -41,8 +43,14 @@ for i in xrange(10000):
     metric.incr(n)
 
 print "Reloaded in %f secconds....\n" % (time() - start)
-print "Starting flask web UI....\n\n"
+print
+
+print "KEYS :", metric.keys()
+for k in metric.keys():
+    print "VALS :", len(metric.values(k))
+
+print "\n\nStarting flask web UI....\n\n"
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", use_reloader=False)
