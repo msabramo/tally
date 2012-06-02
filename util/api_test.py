@@ -10,11 +10,10 @@ from redis import Redis
 print "HACK: Adding tally to the python path"
 path.append("%s/.." % abspath(dirname(__file__)))
 
-from tally import conf
-from tally import metric
-from tally.storage import base
-from tally.storage.backends.redis import pool
-from tally.web.controllers import app
+from tally import conf, record, counter
+from tally.storage.redis import pool
+from tally.web import app
+from tally.metric import base
 
 
 print "Flushing Redis"
@@ -40,19 +39,19 @@ start = time()
 stat_names = ['registrations', 'posts', 'page loads', 'updates', 'something else']
 for i in xrange(10000):
     n = choice(stat_names)
-    metric.incr(n)
+    counter.incr(n)
 
 for i in range(10000):
-    metric.record("Processing Time", randint(0, 5))
+    record.add("Processing Time", randint(0, 5))
 
 
 print "Reloaded in %f secconds....\n" % (time() - start)
 print
 
 
-print "KEYS :", metric.counters()
-for k in metric.counters():
-    print "VALS :", len(metric.values(k))
+print "KEYS :", counter.keys()
+for k in counter.keys():
+    print "VALS :", len(counter.values(k))
 
 
 print "\n\nStarting flask web UI....\n\n"

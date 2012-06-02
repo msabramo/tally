@@ -5,9 +5,7 @@ REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DATABASE = 1
 
-STORAGE_BACKEND = 'tally.storage.backends.redis'
-
-REPORT_BACKEND = 'tally.report.backends.matplotlib'
+STORAGE_BACKEND = 'tally.storage.redis.RedisBackend'
 
 try:
     from tallyconfig import *

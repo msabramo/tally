@@ -1,11 +1,8 @@
 from __future__ import absolute_import
 
-from datetime import datetime
-from time import mktime
-
 from flask import Flask, request, jsonify, render_template
 
-from tally.metric import  counters, records, values, keyring
+from tally import  counter, record
 
 app = Flask('tally.web')
 
@@ -16,27 +13,30 @@ app.config.from_object(__name__)
 
 @app.route("/")
 def index():
-    all_counters = sorted(list(counters()))
-    all_records = sorted(list(records()))
-    return render_template("index.html", counters=all_counters, records=all_records)
+    all_counters = sorted(list(counter.keys()))
+    all_records = sorted(list(record.keys()))
+    return render_template("index.html",
+        counters=all_counters,
+        records=all_records,
+    )
 
 
-@app.route("/api/metric/<slug>", methods=['GET'])
-def get_metric(slug):
+@app.route("/api/metric/counter/<slug>", methods=['GET'])
+def get_metric_counter(slug):
 
-    keys = [k.rsplit(":", 1)[1] for k in keyring(slug)]
-    vals = values(slug)
+    c = counter.get(slug)
 
-    if 'daily' in request.args:
-        keys = [mktime(datetime.fromtimestamp(float(str(key))).date().timetuple()) for key in keys]
-        data = {}
-        for i, key in enumerate(keys):
-            data[key] = data.get(key, 0) + int(vals[i])
-        data = sorted(list(data.items()))
-    else:
-        data = sorted(list(zip(keys, vals)))
+    d = {
+        'name': slug,
+        'data': list(c.timestamp_items())
+    }
 
-    return jsonify(data=data)
+    return jsonify(d)
+
+
+@app.route("/api/metric/record/<slug>", methods=['GET'])
+def get_metric_records(slug):
+    pass
 
 
 @app.context_processor

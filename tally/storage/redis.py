@@ -42,7 +42,7 @@ METRIC_STORE_KEY = "METRIC_STORE_KEY"
 _key_cache = {}
 
 
-class Backend(BaseBackend):
+class RedisBackend(BaseBackend):
 
     def __init__(self):
 
@@ -65,7 +65,7 @@ class Backend(BaseBackend):
         self.store_key(key, METRIC_NAMES_KEY)
 
         value_key = self.value_key(key)
-        keyring_key = self.keyring_key(key, "by.date")
+        keyring_key = self.counter_keyring_key(key)
         timestamp = self.timestamp()
 
         self.conn.incr(value_key)
@@ -76,7 +76,7 @@ class Backend(BaseBackend):
         self.store_key(key, METRIC_STORE_KEY)
 
         value_key = self.value_key(key)
-        keyring_key = self.keyring_key(key, "stored.values")
+        keyring_key = self.record_keyring_key(key)
         timestamp = self.timestamp()
 
         self.conn.sadd(value_key, value)
@@ -88,9 +88,22 @@ class Backend(BaseBackend):
     def records(self):
         return self.conn.smembers(METRIC_STORE_KEY)
 
-    def keyring(self, key):
-        return self.conn.zrange(self.keyring_key(key, "by.date"), 0, -1)
+    def counter_keyring(self, key):
+        return self.conn.zrange(self.counter_keyring_key(key), 0, -1)
 
-    def values(self, key):
-        keys = self.keyring(key)
+    def record_keyring(self, key):
+        return self.conn.zrange(self.record_keyring_key(key), 0, -1)
+
+    def counter_keyring_key(self, key):
+        return self.keyring_key(key, "by.date")
+
+    def record_keyring_key(self, key):
+        return self.keyring_key(key, "stored.values")
+
+    def counter_values(self, key):
+        keys = self.counter_keyring(key)
+        return self.conn.mget(keys)
+
+    def record_values(self, key):
+        keys = self.record_keyring(key)
         return self.conn.mget(keys)
