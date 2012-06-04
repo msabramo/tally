@@ -57,4 +57,4 @@ class RecordMetric(BaseRecord, Metric):
         return self.storage.record_values(self.key)
 
     def keys(self):
-        return self.storage.record_keyring(self.key)
+        return self.storage.record_keychain(self.key)

@@ -53,7 +53,7 @@
           <h2>Counters</h2>
           <ul>
           {% for key in counters %}
-            <li><a href="#!/metric/{{ key }}">{{ key }}</a></li>
+            <li><a href="#!/metric/counter/{{ key }}">{{ key }}</a></li>
           {% endfor %}
           </ul>
         </div>
@@ -62,7 +62,7 @@
           <h2>Records</h2>
           <ul>
           {% for key in records %}
-            <li><a href="#!/metric/{{ key }}">{{ key }}</a></li>
+            <li><a href="#!/metric/record/{{ key }}">{{ key }}</a></li>
           {% endfor %}
           </ul>
         </div>

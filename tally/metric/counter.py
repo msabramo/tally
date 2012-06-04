@@ -55,4 +55,4 @@ class CounterMetric(BaseCounter, Metric):
         return self.storage.counter_values(self.key)
 
     def keys(self):
-        return self.storage.counter_keyring(self.key)
+        return self.storage.counter_keychain(self.key)

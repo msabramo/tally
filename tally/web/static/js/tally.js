@@ -2,7 +2,7 @@ $(function(){
 
 
     var Metric = Backbone.Model.extend({
-        urlRoot: '/api/metric',
+        urlRoot: '/api/metric/counter',
 
         parse: function(response){
             console.log(response);
