@@ -33,6 +33,9 @@ class Metric(Callable, Sized, Iterable):
     def __len__(self):
         return len(self.keys())
 
+    def __call__(self):
+        raise Exception("Not implemented")
+
     def timestamps(self):
 
         for key in self.keys():
