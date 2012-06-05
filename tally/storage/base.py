@@ -2,9 +2,7 @@ from __future__ import absolute_import
 
 from time import time
 
-
-class NotImplemented(Exception):
-    pass
+from ..exceptions import UnimplementedException
 
 
 def now():
@@ -38,36 +36,36 @@ class BaseBackend(object):
         If this is the first time it has been tracked the counter should be
         set to 1 (thus starting at 0 and plus 1 for this)
         """
-        raise NotImplemented("Method not implemented by the backend")
+        raise UnimplementedException("Method not implemented by the backend")
 
     def record(self, key, value):
         """
         Method should store a value with a datetime against a key.
         """
-        raise NotImplemented("Method not implemented by the backend")
+        raise UnimplementedException("Method not implemented by the backend")
 
     def counters(self):
         """
         Method should return the names of all the counters.
         """
-        raise NotImplemented("Method not implemented by the backend")
+        raise UnimplementedException("Method not implemented by the backend")
 
     def records(self):
         """
         Method should return the names of all the records.
         """
-        raise NotImplemented("Method not implemented by the backend")
+        raise UnimplementedException("Method not implemented by the backend")
 
     def counter_values(self, key, start=None, end=None):
         """
         Return the stored datetime and values for a key, filtered by date
         ranges if given.
         """
-        raise NotImplemented("Method not implemented by the backend")
+        raise UnimplementedException("Method not implemented by the backend")
 
     def record_values(self, key, start=None, end=None):
         """
         Return the stored datetime and values for a key, filtered by date
         ranges if given.
         """
-        raise NotImplemented("Method not implemented by the backend")
+        raise UnimplementedException("Method not implemented by the backend")

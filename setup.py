@@ -25,6 +25,7 @@ setup(
     ],
     test_suite="nose.collector",
     tests_require=[
+        'Flask-Testing',
         'mock',
         'nose',
         'unittest2',

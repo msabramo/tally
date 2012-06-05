@@ -5,7 +5,7 @@ from functools import wraps
 from .base import Manager, Metric
 
 
-class BaseCounter(object):
+class CounterManager(Manager):
 
     def incr(self, key):
         self.storage.incr(key)
@@ -24,15 +24,6 @@ class BaseCounter(object):
 
         return inner_timer
 
-
-class CounterManager(BaseCounter, Manager):
-
-    def incr(self, key):
-        super(CounterManager, self).incr(key)
-
-    def __call__(self, key):
-        super(CounterManager, self).__call__(key)
-
     def values(self, key):
         return self.storage.counter_values(key)
 
@@ -43,13 +34,27 @@ class CounterManager(BaseCounter, Manager):
         return CounterMetric(key, storage=self.storage)
 
 
-class CounterMetric(BaseCounter, Metric):
+class CounterMetric(Metric):
 
     def incr(self):
-        super(CounterMetric, self).incr(self.key)
+        self.storage.incr(self.key)
 
-    def __call__(self):
-        super(CounterMetric, self).__call__(self.key)
+    def __call__(self, fn=None):
+
+        def inner_timer(f):
+
+            @wraps(f)
+            def wrapper(*args, **kwds):
+                result = f(*args, **kwds)
+                self.incr()
+                return result
+
+            return wrapper
+
+        if fn:
+            return inner_timer(fn)
+
+        return inner_timer
 
     def values(self):
         return self.storage.counter_values(self.key)

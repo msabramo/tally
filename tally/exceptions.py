@@ -1,0 +1,4 @@
+
+
+class UnimplementedException(Exception):
+    pass
