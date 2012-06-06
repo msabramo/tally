@@ -13,8 +13,10 @@ app.config.from_object(__name__)
 
 @app.route("/")
 def index():
+
     all_counters = sorted(list(counter.keys()))
     all_records = sorted(list(record.keys()))
+
     return render_template("index.html",
         counters=all_counters,
         records=all_records,

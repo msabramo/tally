@@ -19,7 +19,9 @@ class RecordManager(Manager):
             def wrapper(*args, **kwds):
                 t = time()
                 result = f(*args, **kwds)
-                self.add(key, time() - t)
+                v = time() - t
+                print v
+                self.add(key, v)
                 return result
 
             return wrapper
@@ -64,3 +66,9 @@ class RecordMetric(Metric):
 
     def keys(self):
         return self.storage.record_keychain(self.key)
+
+    def min(self):
+        return min(min(s) for s in self.values())
+
+    def max(self):
+        return max(max(s) for s in self.values())

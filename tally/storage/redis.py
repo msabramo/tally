@@ -130,4 +130,6 @@ class RedisBackend(BaseBackend):
 
     def record_values(self, key):
         keys = self.record_keychain(key)
-        return self.conn.mget(keys)
+
+        for k in keys:
+            yield self.conn.smembers(k)
