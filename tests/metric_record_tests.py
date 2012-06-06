@@ -39,3 +39,22 @@ class RecordMetricTestCase(TestCase):
 
         count_me_too()
         count_me_too()
+
+
+class RecordManagerTestCase(TestCase):
+
+    def setUp(self):
+
+        from tally.metric.record import RecordManager
+
+        self.mock_storage = MagicMock()
+
+        self.manager = RecordManager(storage=self.mock_storage)
+
+    def test_decorator_interface(self):
+
+        @self.manager("registrations")
+        def register_user():
+            pass
+
+        register_user()

@@ -48,7 +48,6 @@ class CounterManagerTestCase(TestCase):
         from tally.metric.counter import CounterManager
 
         self.mock_storage = MagicMock()
-        self.mock_storage.counter_keychain = MagicMock(return_value=['a:100', 'b:200', 'c:300'])
 
         self.manager = CounterManager(storage=self.mock_storage)
 
