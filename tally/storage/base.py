@@ -20,14 +20,6 @@ class BaseBackend(object):
     def timestamp(self):
         return now()
 
-    def value_key(self, key):
-        key = "%s:by.date:%s" % (key, self.timestamp())
-        return key
-
-    def keychain_key(self, key, name):
-        key = "%s:%s:keys" % (key, name)
-        return key
-
     def incr(self, key):
         """
         Method should increment the given key name in the wrapped storage

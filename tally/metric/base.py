@@ -44,12 +44,15 @@ class Metric(Callable, Sized, Iterable):
         return len(self.keys())
 
     def __call__(self):
-        raise UnimplementedException("")
+        raise UnimplementedException("Must be implemented by the meric subclass.")
 
     def keys(self):
-        raise UnimplementedException("")
+        raise UnimplementedException("Must be implemented by the meric subclass.")
 
     def timestamps(self):
+        """
+        Return a generator of all the timestamps extracted from the keys.
+        """
 
         for key in self.keys():
 
@@ -60,7 +63,13 @@ class Metric(Callable, Sized, Iterable):
             yield key
 
     def timestamp_items(self):
+        """
+        Return a generator with 2-tuples containing the timestamps and values
+        """
         return izip(self.timestamps(), self.values())
 
     def items(self):
+        """
+        Return a generator with 2-tuples containing the full keys and values
+        """
         return izip(self.keys(), self.values())

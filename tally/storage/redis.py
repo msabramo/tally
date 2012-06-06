@@ -53,6 +53,14 @@ class RedisBackend(BaseBackend):
         else:
             self.conn = connection
 
+    def value_key(self, value_type, key):
+        key = "%s:%s:%s" % (key, value_type, self.timestamp())
+        return key
+
+    def keychain_key(self, key, name):
+        key = "%s:%s:keys" % (key, name)
+        return key
+
     def store_key(self, key, set_key):
         """
         Stores the key in redis to keep a record of all the different metric
@@ -92,7 +100,7 @@ class RedisBackend(BaseBackend):
 
         self.store_counter(key)
 
-        value_key = self.value_key(key)
+        value_key = self.value_key('by.date', key)
         keychain_key = self.counter_keychain_key(key)
         timestamp = self.timestamp()
 
@@ -103,7 +111,7 @@ class RedisBackend(BaseBackend):
 
         self.store_record(key)
 
-        value_key = self.value_key(key)
+        value_key = self.value_key('stored.values', key)
         keychain_key = self.record_keychain_key(key)
         timestamp = self.timestamp()
 
