@@ -43,11 +43,18 @@ class CounterMetricTestCase(TestCase):
 
 class CounterManagerTestCase(TestCase):
 
+    def setUp(self):
+
+        from tally.metric.counter import CounterManager
+
+        self.mock_storage = MagicMock()
+        self.mock_storage.counter_keychain = MagicMock(return_value=['a:100', 'b:200', 'c:300'])
+
+        self.manager = CounterManager(storage=self.mock_storage)
+
     def test_decorator_interface(self):
 
-        from tally import counter
-
-        @counter("registrations")
+        @self.manager("registrations")
         def register_user():
             pass
 
