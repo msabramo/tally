@@ -24,7 +24,7 @@ setup(
     author='Dougal Matthews',
     author_email='dougal85@gmail.com',
     setup_requires=[
-        'versiontools >= 1.6',
+        # 'versiontools >= 1.6',
     ],
     test_suite="nose.collector",
     tests_require=test_requirements,
