@@ -29,7 +29,7 @@ setup(
     test_suite="nose.collector",
     tests_require=test_requirements,
     packages=find_packages(exclude=('tests', 'docs')),
-    zip=False,
+    zip_safe=False,
     entry_points="""[console_scripts]
         tally_web= tally.web.__main__:main
     """,
