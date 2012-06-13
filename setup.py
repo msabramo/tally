@@ -8,8 +8,11 @@ with open('README.rst') as f:
 with open('LICENSE') as f:
     license = f.read()
 
-with open('requirements.txt') as f:
+with open('requirements/install.txt') as f:
     requirements = f.readlines()
+
+with open('requirements/test.txt') as f:
+    test_requirements = f.readlines()
 
 setup(
     name="tally",
@@ -24,12 +27,7 @@ setup(
         'versiontools >= 1.6',
     ],
     test_suite="nose.collector",
-    tests_require=[
-        'Flask-Testing',
-        'mock',
-        'nose',
-        'unittest2',
-    ],
+    tests_require=test_requirements,
     packages=find_packages(exclude=('tests', 'docs')),
     zip=False,
     entry_points="""[console_scripts]
