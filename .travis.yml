@@ -6,6 +6,4 @@ python:
 install:
   - pip install . --use-mirrors
   - pip install -r requirements/test.txt
-before_script:
-  - flake8 tally
 script: nosetests
